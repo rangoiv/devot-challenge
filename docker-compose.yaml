@@ -4,24 +4,36 @@ services:
   app:
     build: .
     container_name: fastapi-app
-    restart: always
     env_file:
       - .env
     ports:
       - "8000:8000"
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
+    networks:
+      - mynetwork
 
   postgres:
     image: postgres
-    container_name: postgres-db
-    restart: always
+    environment:
+      PGUSER: $USER
     env_file:
       - .env
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - mynetwork
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d $POSTGRES_DB -U $POSTGRES_USER"]
+      interval: 1s
+      timeout: 5s
+      retries: 10
+
+networks:
+  mynetwork:
 
 volumes:
   postgres_data:
