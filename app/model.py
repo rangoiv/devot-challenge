@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Float, ForeignKey
-from sqlalchemy.orm import relationship
 from database import Base
+
 
 class User(Base):
     __tablename__ = "users"
@@ -8,6 +8,7 @@ class User(Base):
     email = Column(String, unique=True, index=True, nullable=False)
     hashed_password = Column(String, nullable=False)
     balance = Column(Float, default=1000.0)  # Predefined balance
+
 
 class Transaction(Base):
     __tablename__ = "transactions"
