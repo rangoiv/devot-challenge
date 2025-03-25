@@ -50,3 +50,10 @@ sudo docker stop local-postgres && sudo docker rm local-postgres
 ```sh
 sudo docker-compose down --volumes --remove-orphans; sudo docker-compose build; sudo docker-compose up
 ```
+
+## ✅ Testing
+
+After running the app, run the command:
+```sh
+./app/tests/test_all.sh
+```
