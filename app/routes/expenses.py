@@ -1,16 +1,19 @@
 from auth import get_current_user
-from database import get_db
+from db import Expense, User, get_db
 from fastapi import APIRouter, Depends, HTTPException
-from model import Transaction, User
-from schema import TransactionRequest
+from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 router = APIRouter()
 
 
-@router.post("/deposit/")
+class ExpenseRequest(BaseModel):
+    amount: float
+
+
+@router.post("/category/")
 def deposit(
-    amount: TransactionRequest,
+    amount: ExpenseRequest,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
@@ -20,7 +23,7 @@ def deposit(
     current_user.balance += amount.amount
     db.commit()
 
-    new_transaction = Transaction(user_id=current_user.id, amount=amount.amount)
+    new_transaction = Expense(user_id=current_user.id, amount=amount.amount)
     db.add(new_transaction)
     db.commit()
 

@@ -1,13 +1,23 @@
 from datetime import timedelta
 
 from auth import create_access_token, hash_password, verify_password
-from database import get_db
+from db import User, get_db
 from env import env
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
-from model import User
-from schema import Token, UserCreate
+from pydantic import BaseModel, EmailStr
 from sqlalchemy.orm import Session
+
+
+class UserCreate(BaseModel):
+    email: EmailStr
+    password: str
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
 
 router = APIRouter()
 
@@ -27,7 +37,7 @@ def register(user_data: UserCreate, db: Session = Depends(get_db)):
 
     access_token = create_access_token(
         data={"sub": new_user.email},
-        expires_delta=timedelta(minutes=env["atuh.access_token_expires_minutes"]),
+        expires_delta=timedelta(minutes=env["auth.access_token_expires_minutes"]),
     )
     return {"access_token": access_token, "token_type": "bearer"}
 
@@ -42,6 +52,6 @@ def login(
 
     access_token = create_access_token(
         data={"sub": user.email},
-        expires_delta=timedelta(minutes=env["atuh.access_token_expires_minutes"]),
+        expires_delta=timedelta(minutes=env["auth.access_token_expires_minutes"]),
     )
     return {"access_token": access_token, "token_type": "bearer"}

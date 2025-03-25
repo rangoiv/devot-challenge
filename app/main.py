@@ -1,15 +1,18 @@
+from db import initialize_db
 from fastapi import FastAPI
-from database import engine, Base
-from routes import users, transactions
+from routes import users
+
+from routes import categories, expenses
 
 app = FastAPI()
 
-# Create database tables
-Base.metadata.create_all(bind=engine)
+initialize_db()
 
 # Include routers
 app.include_router(users.router, prefix="/users", tags=["Users"])
-app.include_router(transactions.router, prefix="/transactions", tags=["Transactions"])
+app.include_router(expenses.router, prefix="/expenses", tags=["Expenses"])
+app.include_router(categories.router, prefix="/categories", tags=["Categories"])
+
 
 @app.get("/")
 def home():

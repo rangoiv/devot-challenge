@@ -1,11 +1,10 @@
 from datetime import datetime, timedelta
 
-from database import get_db
+from db import User, get_db
 from env import env
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
-from model import User
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 
@@ -25,7 +24,9 @@ def create_access_token(data: dict, expires_delta: timedelta):
     to_encode = data.copy()
     expire = datetime.now() + expires_delta
     to_encode.update({"exp": expire})
-    return jwt.encode(to_encode, env["auth.secret_key"], algorithm=env["auth.algorithm"])
+    return jwt.encode(
+        to_encode, env["auth.secret_key"], algorithm=env["auth.algorithm"]
+    )
 
 
 def get_current_user(
@@ -38,7 +39,9 @@ def get_current_user(
     )
 
     try:
-        payload = jwt.decode(token, env["auth.secret_key"], algorithms=env["auth.algorithm"])
+        payload = jwt.decode(
+            token, env["auth.secret_key"], algorithms=env["auth.algorithm"]
+        )
         email: str = payload.get("sub")
         if email is None:
             raise credentials_exception
