@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Float, ForeignKey, Integer, String
+from sqlalchemy import Column, DateTime, Float, ForeignKey, Integer, String, func
+from sqlalchemy.orm import relationship
 
 from .base import Base
 
@@ -23,4 +24,8 @@ class Expense(Base):
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     category_id = Column(Integer, ForeignKey("categories.id"), nullable=False)
     amount = Column(Float, nullable=False)
+    created_at = Column(DateTime, server_default=func.now())
+
     description = Column(String, nullable=False)
+
+    category = relationship("ExpenseCategory")

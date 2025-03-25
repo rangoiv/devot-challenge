@@ -1,5 +1,5 @@
 from env import env
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
 
 from .base import Base

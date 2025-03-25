@@ -1,6 +1,6 @@
 #!/bin/bash
 
-BASE_URL="http://127.0.0.1:8000/categories"
+BASE_URL="$API_URL/categories"
 
 echo "📌 Creating a category..."
 CATEGORY_ID=$(curl -s -X POST "$BASE_URL/" -H "Content-Type: application/json" -d '{"name": "goods"}' | jq -r '.id')
